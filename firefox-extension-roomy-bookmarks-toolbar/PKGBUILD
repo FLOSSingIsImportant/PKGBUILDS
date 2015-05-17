@@ -1,0 +1,27 @@
+_plugin_name=roomy_bookmarks_toolbar
+_plugin_version=1.4.7
+
+pkgname=firefox-extension-roomy-bookmarks-toolbar
+pkgver=$_plugin_version
+pkgrel=1
+pkgdesc="Make your bookmarks bar better."
+
+license=('BSD')
+arch=('any')
+url="https://addons.mozilla.org/en-us/firefox/addon/youtube-center/"
+depends=("firefox")
+
+source=("https://addons.mozilla.org/firefox/downloads/file/275734/${_plugin_name}-${_plugin_version}.xpi")
+sha256sums=('7b4875bedeee4bf127f4ff5654fb43415f885290c5ece0cbf80ff5de3b608c32')
+
+package() {
+  cd $srcdir
+
+  emid=$(sed -n '/.*<em:id>\(.*\)<\/em:id>.*/{s//\1/p;q}' install.rdf) || return 1
+  local dstdir=$pkgdir/usr/lib/firefox/browser/extensions/${emid}
+
+  install -d $dstdir
+  cp -r * $dstdir
+  rm $dstdir/$_plugin_name-$_plugin_version.xpi
+  chmod -R 755 $dstdir
+}

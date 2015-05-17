@@ -1,0 +1,25 @@
+_extensionname=reddit_enhancement_suite
+pkgname=firefox-extension-reddit-enhancement-suite
+pkgver=4.5.4
+pkgrel=1
+pkgdesc="A suite of tools to enhance Reddit."
+
+license=('GPL3')
+arch=('any')
+url="http://redditenhancementsuite.com/"
+depends=("firefox")
+
+source=("https://addons.mozilla.org/firefox/downloads/file/290816/reddit_enhancement_suite-4.5.4.xpi")
+md5sums=('a6e78cf676f5bdd7f19c045cd19eed32')
+
+package() {
+  cd $srcdir
+
+  emid=$(sed -n '/.*<em:id>\(.*\)<\/em:id>.*/{s//\1/p;q}' install.rdf) || return 1
+  local dstdir=$pkgdir/usr/lib/firefox/browser/extensions/${emid}
+
+  install -d $dstdir
+  cp -r * $dstdir
+  rm $dstdir/reddit_enhancement_suite-4.5.4.xpi
+  chmod -R 755 $dstdir
+}
